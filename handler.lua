@@ -43,6 +43,7 @@ function FooHandler:access(config)
 
 	ngx.req.read_body()
 	local h = ngx.req.get_post_args()
+	local uri = ngx.var.request_uri
 
 	-- Check for required values
 	local client_id = h["client_id"]
@@ -51,7 +52,6 @@ function FooHandler:access(config)
 		ngx.say("missing id or secret")
 		ngx.exit(400)
 	end
-	local token = h["token"]
 	local dest = "nil"
 	local data = string.format(
 		"client_id=%s&client_secret=%s",
@@ -64,9 +64,8 @@ function FooHandler:access(config)
 	local client_secret = "ALpXQvRXcLPFIFqE2dzhZ1tobGBHmvIpg5pKSlHrpD7r8I7ejNfmYY-wFre7Ubx9h6SmoCAqGB0bLFmnhrv08mQ"
 	]]
 
-	-- check for token and redirect if present
 	---[[
-	if token == nil then
+	if uri == "/token" then
 		-- Request Token
 		dest = "requestToken"
 		local scope = "openid"
