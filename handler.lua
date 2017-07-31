@@ -66,21 +66,25 @@ function FooHandler:access(config)
 		local grant_type = "client_credentials"
 		toAdd = string.format("&scope=%s&grant_type=%s", scope, grant_type)
 		data = data .. toAdd
-		ngx.req.set_uri("http://localhost:8080/openid-connect-server-webapp/token")
+		ngx.req.set_uri("/token")
 		ngx.req.set_method(ngx.HTTP_POST)
 	elseif uri == "/introspect" then
 		-- Introspect token
 		dest = "introspection"
 		token = h["token"]
+		if token == nil then
+			ngx.say("missing token")
+			ngx.exit(400)
+		end
 		toAdd = string.format("&token=%s", token)
 		data = data .. toAdd
-		ngx.req.set_uri("http://localhost:8080/openid-connect-server-webapp/introspect")
+		ngx.req.set_uri("/introspect")
 		ngx.req.set_method(ngx.HTTP_GET)
 	end
 	ngx.req.set_header("Destination", dest)
 	--]]
 
-	-- Set data params	
+	-- Set data params
 	ngx.req.set_uri_args(data)
 
 	-- Choose URI
