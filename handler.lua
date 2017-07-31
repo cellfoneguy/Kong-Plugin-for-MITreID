@@ -58,12 +58,6 @@ function FooHandler:access(config)
 		client_id, client_secret)
 	local toAdd = nil
 
-	-- debug set values
-	--[[
-	local client_id = "03c6f140-ba6e-4a38-917e-61bcc99c75d2"
-	local client_secret = "ALpXQvRXcLPFIFqE2dzhZ1tobGBHmvIpg5pKSlHrpD7r8I7ejNfmYY-wFre7Ubx9h6SmoCAqGB0bLFmnhrv08mQ"
-	]]
-
 	---[[
 	if uri == "/token" then
 		-- Request Token
@@ -73,17 +67,14 @@ function FooHandler:access(config)
 		toAdd = string.format("&scope=%s&grant_type=%s", scope, grant_type)
 		data = data .. toAdd
 		ngx.req.set_uri("http://localhost:8080/openid-connect-server-webapp/token")
-		--ngx.req.set_uri("https://requestb.in/qq8xjbqq")
 		ngx.req.set_method(ngx.HTTP_POST)
-	else
+	elseif uri == "/introspect" then
 		-- Introspect token
 		dest = "introspection"
 		token = h["token"]
-		--token = "eyJraWQiOiJyc2ExIiwiYWxnIjoiUlMyNTYifQ.eyJzdWIiOiIwM2M2ZjE0MC1iYTZlLTRhMzgtOTE3ZS02MWJjYzk5Yzc1ZDIiLCJhenAiOiIwM2M2ZjE0MC1iYTZlLTRhMzgtOTE3ZS02MWJjYzk5Yzc1ZDIiLCJpc3MiOiJodHRwOlwvXC9sb2NhbGhvc3Q6ODA4MFwvb3BlbmlkLWNvbm5lY3Qtc2VydmVyLXdlYmFwcFwvIiwiZXhwIjoxNTAxMjgyNjA0LCJpYXQiOjE1MDEyNzkwMDQsImp0aSI6IjU3MmYzYmZiLWM5NzUtNDljZC04YjI4LWMwOGNmMDQ1OTA4ZCJ9.oYRvrcWdMDTVqgLYJMEC8bA6GQyLRgEQJcCBPuQP3gzyZ3JQUk3lYxta9zJbBIfk2W4Mjicg_W0dmWMlG6THyV2YS4gFBqZgV4fL6HaRSi52h7eZdfsoZc1wcczdE46XpWGQlFPKQEj4yenoIBBTTBJaE2MwGxRGZC6ybkFqufkGeI-EaCxPtpf9vfm781AVs5ts-N0B3pUwTejbIOg-MlBnd989BVe4ZlOtue5ltP_c1sjEmLI2L8AWr1hw7W07zm7Rr7n5sJ0PL6GiI8IcW-BfbSwvfwkU5Kh51oVhpAz39notAOcdlZrVIpYmjleLR8mdPznIinWU6gss22OApA"
 		toAdd = string.format("&token=%s", token)
 		data = data .. toAdd
 		ngx.req.set_uri("http://localhost:8080/openid-connect-server-webapp/introspect")
-		--ngx.req.set_uri("https://requestb.in/qq8xjbqq")			
 		ngx.req.set_method(ngx.HTTP_GET)
 	end
 	ngx.req.set_header("Destination", dest)
